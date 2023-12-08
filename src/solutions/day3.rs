@@ -1,5 +1,4 @@
-use std::fs::{self, File};
-use std::io::prelude::*;
+use std::fs::{self};
 use std::ops::Mul;
 
 #[derive(Debug)]
@@ -9,9 +8,7 @@ struct Number {
 }
 
 pub fn execute_day_three_one() -> u32 {
-    let mut file = File::create("example.txt").expect("should be able to create file");
-
-    let filepath = "src/inputs/day-3-3";
+    let filepath = "src/inputs/day-3";
 
     let content = fs::read_to_string(filepath).expect("Should read file");
 
@@ -96,7 +93,7 @@ fn is_not_digit_or_period(vec_con: &Vec<Vec<char>>, row: usize, col: usize) -> b
 }
 
 pub fn day_three_two() -> u32 {
-    let filepath = "src/inputs/day-3-3";
+    let filepath = "src/inputs/day-3";
 
     let content = fs::read_to_string(filepath).expect("Should read file");
 

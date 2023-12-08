@@ -1,7 +1,7 @@
 use std::fs;
 
 pub fn execute_day_one_one() -> u32 {
-    let filepath = "src/inputs/day-1-1";
+    let filepath = "src/inputs/day-1";
 
     let content = fs::read_to_string(filepath).expect("Should read file");
 

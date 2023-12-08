@@ -1,7 +1,7 @@
 use crate::solutions::{
-    day1_1::{execute_day_one_one, execute_day_one_two},
-    day2_2::{execute_day_two_one, execute_day_two_two},
-    day3_3::{day_three_two, execute_day_three_one},
+    day1::{execute_day_one_one, execute_day_one_two},
+    day2::{execute_day_two_one, execute_day_two_two},
+    day3::{day_three_two, execute_day_three_one},
 };
 
 pub mod solutions;
