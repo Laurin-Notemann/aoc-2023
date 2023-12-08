@@ -1,5 +1,6 @@
 use std::fs::{self, File};
 use std::io::prelude::*;
+use std::ops::Mul;
 
 #[derive(Debug)]
 struct Number {
@@ -92,4 +93,111 @@ fn is_not_digit_or_period(vec_con: &Vec<Vec<char>>, row: usize, col: usize) -> b
         return false;
     }
     !vec_con[col][row].is_digit(10) && vec_con[col][row] != '.'
+}
+
+pub fn day_three_two() -> u32 {
+    let filepath = "src/inputs/day-3-3";
+
+    let content = fs::read_to_string(filepath).expect("Should read file");
+
+    let two_d_array: Vec<Vec<char>> = content.lines().map(|item| item.chars().collect()).collect();
+
+    let something = two_d_array
+        .iter()
+        .enumerate()
+        .map(|(col_idx, col_el)| {
+            col_el
+                .iter()
+                .enumerate()
+                .map(|(row_idx, row_el)| {
+                    let mut product: u32 = 0;
+                    if row_el == &'*' {
+                        let mut digit_one: u32 = 0;
+                        let mut digit_two: u32 = 0;
+                        for i in 0..=2 {
+                            for j in 0..=2 {
+                                let row_to_test: isize = row_idx as isize + j - 1;
+                                let col_to_test: isize = col_idx as isize + i - 1;
+
+                                if col_to_test < 0 || row_to_test < 0 {
+                                    continue;
+                                }
+
+                                let col_to_test: usize =
+                                    col_to_test.try_into().expect("should be above 0");
+                                let row_to_test: usize =
+                                    row_to_test.try_into().expect("should be above 0");
+
+                                if col_to_test == col_idx && row_to_test == row_idx {
+                                    continue;
+                                }
+
+                                if two_d_array[col_to_test][row_to_test].is_digit(10) {
+                                    let mut curr_row_to_left = row_to_test;
+
+                                    let mut left_side_digits: Vec<char> = vec![];
+                                    while two_d_array[col_to_test][curr_row_to_left].is_digit(10) {
+                                        if curr_row_to_left > 0 {
+                                            curr_row_to_left -= 1;
+                                        } else {
+                                            break;
+                                        }
+                                        if two_d_array[col_to_test][curr_row_to_left].is_digit(10) {
+                                            left_side_digits
+                                                .push(two_d_array[col_to_test][curr_row_to_left]);
+                                        }
+                                    }
+                                    let mut curr_row_to_right = row_to_test;
+
+                                    let mut right_side_digits: Vec<char> = vec![];
+                                    while two_d_array[col_to_test][curr_row_to_right].is_digit(10) {
+                                        if curr_row_to_right < two_d_array[col_idx].len() - 1 {
+                                            curr_row_to_right += 1;
+                                        } else {
+                                            break;
+                                        }
+                                        if two_d_array[col_to_test][curr_row_to_right].is_digit(10)
+                                        {
+                                            right_side_digits
+                                                .push(two_d_array[col_to_test][curr_row_to_right]);
+                                        }
+                                    }
+
+                                    let mut number_str: String =
+                                        format!("{}", two_d_array[col_to_test][row_to_test]);
+
+                                    for digit in left_side_digits {
+                                        number_str = format!("{}{}", digit, number_str)
+                                    }
+                                    for digit in right_side_digits {
+                                        number_str = format!("{}{}", number_str, digit)
+                                    }
+
+                                    if digit_one == 0 {
+                                        digit_one = number_str.parse().expect("Should be a number")
+                                    } else if digit_two == 0 {
+                                        digit_two = number_str.parse().expect("Should be a number")
+                                    }
+                                    if two_d_array[col_idx + 1][row_idx] == '.'
+                                        && two_d_array[col_idx - 1][row_idx] == '.'
+                                    {
+                                        continue;
+                                    } else {
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+
+                        if digit_one > 0 && digit_two > 0 {
+                            product = digit_one.mul(digit_two);
+                        }
+                    }
+                    return product;
+                })
+                .sum::<u32>()
+        })
+        .collect::<Vec<u32>>();
+
+    return something.iter().sum();
 }
